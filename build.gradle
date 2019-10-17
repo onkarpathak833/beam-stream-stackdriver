@@ -1,20 +1,21 @@
 buildscript {
     repositories {
+        maven {
+           url "https://plugins.gradle.org/m2/"
+        }
         jcenter()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.1.0'
     }
 }
 
 
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '5.0.0'
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
-group 'beam-streaming'
-version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
@@ -56,11 +57,21 @@ dependencies {
 
 }
 
+jar {
+    manifest {
+        attributes "Main-Class": "com.example.onkar.MyApplication"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 
 task customFatJar(type: org.gradle.jvm.tasks.Jar) {
     baseName = "beam-job"
-    version = "1.0.0"
-    classifier = ''
+    group 'beam-streaming'
+    version '1.0-SNAPSHOT'
     manifest {
         attributes(
                 'Main-Class': "com.example.onkar.MyApplication"
